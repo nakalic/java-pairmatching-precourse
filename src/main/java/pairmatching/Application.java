@@ -2,6 +2,11 @@ package pairmatching;
 
 public class Application {
     public static void main(String[] args) {
-        // TODO 구현 진행
+        try {
+            PairMatching pairMatching = new PairMatching();
+            pairMatching.run();
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
     }
 }
