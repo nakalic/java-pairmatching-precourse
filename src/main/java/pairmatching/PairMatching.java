@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pairmatching.domain.Course;
-import pairmatching.domain.Info;
+import pairmatching.domain.Pair;
 import pairmatching.domain.Mission;
 import pairmatching.domain.PairHistory;
 import pairmatching.view.InputView;
@@ -38,46 +38,46 @@ public class PairMatching {
     }
 
     private void matchPair(PairHistory pairHistory) {
-        Info info = getPairInfo();
-        if (pairHistory.isExist(info) && inputView.getTryMore().equals("아니오")) {
+        Pair pair = getPairInfo();
+        if (pairHistory.isExist(pair) && inputView.getTryMore().equals("아니오")) {
             return;
         }
         try {
-            addNewPair(pairHistory, info, 0);
-            outputView.printPairResult(pairHistory.getPair(info));
+            addNewPair(pairHistory, pair, 0);
+            outputView.printPairResult(pairHistory.getPair(pair));
         } catch (IllegalArgumentException exception) {
             System.out.println(exception.getMessage());
             matchPair(pairHistory);
         }
     }
 
-    private void addNewPair(PairHistory pairHistory, Info info, int count) {
+    private void addNewPair(PairHistory pairHistory, Pair pair, int count) {
         if (count == 3) {
             throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
         }
         try {
-            if (info.compareCourse(Course.BACKEND)) {
-                pairHistory.addPair(info, getRandomCrewNames(Course.BACKEND.getEnglishName()));
+            if (pair.compareCourse(Course.BACKEND)) {
+                pairHistory.addPair(pair, getRandomCrewNames(Course.BACKEND.getEnglishName()));
             }
-            if (info.compareCourse(Course.FRONTEND)) {
-                pairHistory.addPair(info, getRandomCrewNames(Course.FRONTEND.getEnglishName()));
+            if (pair.compareCourse(Course.FRONTEND)) {
+                pairHistory.addPair(pair, getRandomCrewNames(Course.FRONTEND.getEnglishName()));
             }
         } catch (IllegalArgumentException e) {
-            addNewPair(pairHistory, info, count + 1);
+            addNewPair(pairHistory, pair, count + 1);
         }
     }
 
-    private Info getPairInfo() {
+    private Pair getPairInfo() {
         String[] pairBackgroundInfo = inputView.getPairBackgroundInfo();
         Course course = Course.findByName(pairBackgroundInfo[0]);
         Mission mission = Mission.findByName(pairBackgroundInfo[2]);
-        return new Info(course, mission);
+        return new Pair(course, mission);
     }
 
     private void inquirePair(PairHistory pairHistory) {
-        Info info = getPairInfo();
+        Pair pair = getPairInfo();
         try {
-            outputView.printPairResult(pairHistory.getPair(info));
+            outputView.printPairResult(pairHistory.getPair(pair));
         } catch (IllegalArgumentException exception) {
             System.out.println(exception.getMessage());
             inquirePair(pairHistory);

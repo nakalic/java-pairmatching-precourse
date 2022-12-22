@@ -1,16 +1,16 @@
 package pairmatching.domain;
 
-public class Info {
+public class Pair {
     private Course course;
     private Mission mission;
 
-    public Info(Course course, Mission mission) {
+    public Pair(Course course, Mission mission) {
         this.course = course;
         this.mission = mission;
     }
 
-    public boolean compareCourse(Info info) {
-        return this.course == info.course;
+    public boolean compareCourse(Pair pair) {
+        return this.course == pair.course;
     }
 
     //오버로딩?
@@ -18,7 +18,7 @@ public class Info {
         return this.course == course;
     }
 
-    public boolean compareMissionLevel(Info info) {
-        return this.mission.getLevel() == info.mission.getLevel();
+    public boolean compareMissionLevel(Pair pair) {
+        return this.mission.getLevel() == pair.mission.getLevel();
     }
 }

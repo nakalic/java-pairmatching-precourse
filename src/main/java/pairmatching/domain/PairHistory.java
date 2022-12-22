@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.Map;
 
 public class PairHistory {
-    public Map<Info, List<String>> pairHistory;
+    public Map<Pair, List<String>> pairHistory;
 
     public PairHistory() {
         pairHistory = new HashMap<>();
     }
 
-    public boolean isExist(Info info) {
-        return pairHistory.get(info) != null;
+    public boolean isExist(Pair pair) {
+        return pairHistory.containsKey(pair);
     }
 
-    public void addPair(Info info, List<String> crews) {
-        for (Info key : pairHistory.keySet()) {
-            if (key.compareCourse(info) && key.compareMissionLevel(info)) {
+    public void addPair(Pair pair, List<String> crews) {
+        for (Pair key : pairHistory.keySet()) {
+            if (key.compareCourse(pair) && key.compareMissionLevel(pair)) {
                 checkDuplicateMatch(pairHistory.get(key), crews);
             }
         }
-        pairHistory.put(info, crews);
+        pairHistory.put(pair, crews);
     }
 
     private void checkDuplicateMatch(List<String> existCrews, List<String> newCrews) {
@@ -56,11 +56,11 @@ public class PairHistory {
         }
     }
 
-    public List<String> getPair(Info info) {
-        if (pairHistory.get(info) == null) {
+    public List<String> getPair(Pair pair) {
+        if (pairHistory.get(pair) == null) {
             throw new IllegalArgumentException("해당 조건에 맞는 페어를 찾을 수 없습니다.");
         }
-        return pairHistory.get(info);
+        return pairHistory.get(pair);
     }
 
     public void resetPair() {
