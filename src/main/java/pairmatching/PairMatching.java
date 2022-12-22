@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.util.Pair;
 import pairmatching.domain.Course;
+import pairmatching.domain.Info;
 import pairmatching.domain.Mission;
 import pairmatching.domain.PairHistory;
 import pairmatching.view.InputView;
@@ -38,7 +38,7 @@ public class PairMatching {
     }
 
     private void matchPair(PairHistory pairHistory) {
-        Pair<Course, Mission> info = getPairInfo();
+        Info info = getPairInfo();
         if (pairHistory.isExist(info) && inputView.getTryMore().equals("아니오")) {
             return;
         }
@@ -51,15 +51,15 @@ public class PairMatching {
         }
     }
 
-    private void addNewPair(PairHistory pairHistory, Pair<Course, Mission> info, int count) {
+    private void addNewPair(PairHistory pairHistory, Info info, int count) {
         if (count == 3) {
             throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
         }
         try {
-            if (info.getKey() == Course.BACKEND) {
+            if (info.compareCourse(Course.BACKEND)) {
                 pairHistory.addPair(info, getRandomCrewNames(Course.BACKEND.getEnglishName()));
             }
-            if (info.getKey() == Course.FRONTEND) {
+            if (info.compareCourse(Course.FRONTEND)) {
                 pairHistory.addPair(info, getRandomCrewNames(Course.FRONTEND.getEnglishName()));
             }
         } catch (IllegalArgumentException e) {
@@ -67,15 +67,15 @@ public class PairMatching {
         }
     }
 
-    private Pair<Course, Mission> getPairInfo() {
+    private Info getPairInfo() {
         String[] pairBackgroundInfo = inputView.getPairBackgroundInfo();
         Course course = Course.findByName(pairBackgroundInfo[0]);
         Mission mission = Mission.findByName(pairBackgroundInfo[2]);
-        return new Pair<>(course, mission);
+        return new Info(course, mission);
     }
 
     private void inquirePair(PairHistory pairHistory) {
-        Pair<Course, Mission> info = getPairInfo();
+        Info info = getPairInfo();
         try {
             outputView.printPairResult(pairHistory.getPair(info));
         } catch (IllegalArgumentException exception) {
