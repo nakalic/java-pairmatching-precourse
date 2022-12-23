@@ -30,8 +30,61 @@ public class PairRecord {
                 .orElseThrow(() -> new IllegalArgumentException("조건에 맞는 페어 이력이 없습니다"));
     }
 
-    public void put(Level level, MissionPair missionPair) {
-        pairRecord.get(level).add(missionPair);
+    /**
+     *
+     */
+
+    public void addPair(MissionPair newMissionPair) {
+        System.out.println("newMissionPair : " + newMissionPair);
+        checkDuplicateMatch(newMissionPair);
+        pairRecord.get(newMissionPair.getMission().getLevel()).add(newMissionPair);
     }
 
+    // 검증 메소드 a,b / b,a 및 a : b: c 고려할 것
+    public void checkDuplicateMatch(MissionPair newMissionPair) {
+        System.out.println("checkDuplicateMatch newMissionPair : " + newMissionPair);
+        System.out.println(newMissionPair.getMission().getLevel());
+        if (pairRecord.get(newMissionPair.getMission().getLevel()).isEmpty()) {
+            return;
+        }
+        List<String> existCrews = this.getMissionPair(newMissionPair.getMission().getLevel(),
+                newMissionPair.getMission().getName()).getResult();
+        List<String> newCrews = newMissionPair.getResult();
+        for (int i = 0; i < existCrews.size() - 2; i += 2) {
+            if (existCrews.get(i).equals(newCrews.get(i)) && existCrews.get(i + 1)
+                    .equals(newCrews.get(i + 1))) {
+                throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+            }
+        }
+        if (existCrews.size() % 2 == 0) {
+            checkEvenNumberOfCrews(existCrews, newCrews);
+        }
+        if (existCrews.size() % 2 == 1) {
+            checkOddNumberOfCrews(existCrews, newCrews);
+        }
+    }
+
+    private void checkEvenNumberOfCrews(List<String> existCrews, List<String> newCrews) {
+        if (existCrews.get(existCrews.size() - 1).equals(newCrews.get(existCrews.size() - 1)) && existCrews.get(
+                        existCrews.size() - 2)
+                .equals(newCrews.get(existCrews.size() - 2))) {
+            throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+        }
+    }
+
+    private void checkOddNumberOfCrews(List<String> existCrews, List<String> newCrews) {
+        if (existCrews.get(existCrews.size() - 1).equals(newCrews.get(existCrews.size() - 1)) && existCrews.get(
+                        existCrews.size() - 2)
+                .equals(newCrews.get(existCrews.size() - 2)) && existCrews.get(existCrews.size() - 3)
+                .equals(newCrews.get(existCrews.size() - 3))) {
+            throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "PairRecord{" +
+                "pairRecord=" + pairRecord +
+                '}';
+    }
 }

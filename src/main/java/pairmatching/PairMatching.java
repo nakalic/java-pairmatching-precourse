@@ -26,10 +26,10 @@ public class PairMatching {
             if (selectFeature.equals("1")) {
                 String[] userInput = inputView.getPairBackgroundInfo();
                 if (userInput[0].equals("백엔드")) {
-                    backEndPairRecord.put(makeLevel(userInput[1]), makeMissionPair(userInput[0], userInput[2]));
+                    makeBackMissionPair(backEndPairRecord,userInput[2],0);
                 }
                 if (userInput[0].equals("프론트엔드")) {
-                    frontEndPairRecord.put(makeLevel(userInput[1]), makeMissionPair(userInput[0], userInput[2]));
+                    makeFrontMissionPair(frontEndPairRecord,userInput[2],0);
                 }
             }
             if (selectFeature.equals("2")) {
@@ -45,6 +45,31 @@ public class PairMatching {
         }
     }
 
+
+    // 메소드 2개?
+    private void makeBackMissionPair(PairRecord pairRecord, String mission, int count) {
+        if (count == 3)
+            throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
+        try {
+            MissionPair missionpair = new MissionPair(makeMission(mission), getRandomCrewNames("백엔드"));
+            System.out.println("missionPair : " +missionpair);
+            pairRecord.addPair(missionpair);
+        } catch (IllegalArgumentException e) {
+            makeBackMissionPair(pairRecord, mission, count);
+        }
+    }
+
+    private void makeFrontMissionPair(PairRecord pairRecord, String mission, int count) {
+        if (count == 3)
+            throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
+        try {
+            MissionPair missionpair = new MissionPair(makeMission(mission), getRandomCrewNames("프론트엔드"));
+            pairRecord.addPair(missionpair);
+        } catch (IllegalArgumentException e) {
+            makeFrontMissionPair(pairRecord, mission, count);
+        }
+    }
+
     private void inquireRecord(PairRecord backEndPairRecord, PairRecord frontEndPairRecord) {
         String[] userInput = inputView.getPairBackgroundInfo();
         if (userInput[0].equals("백엔드")) {
@@ -53,10 +78,6 @@ public class PairMatching {
         if (userInput[0].equals("프론트엔드")) {
             outputView.printPairResult(frontEndPairRecord.getMissionPair(makeLevel(userInput[1]), userInput[2]));
         }
-    }
-
-    private MissionPair makeMissionPair(String course, String mission) {
-        return new MissionPair(makeMission(mission), getRandomCrewNames(course));
     }
 
     private List<String> getRandomCrewNames(String userInput) {

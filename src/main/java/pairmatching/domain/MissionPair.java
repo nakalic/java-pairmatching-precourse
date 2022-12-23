@@ -18,4 +18,12 @@ public class MissionPair {
     public List<String> getResult() {
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "MissionPair{" +
+                "mission=" + mission +
+                ", result=" + result +
+                '}';
+    }
 }
