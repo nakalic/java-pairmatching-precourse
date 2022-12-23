@@ -8,7 +8,7 @@ public enum Level {
     LEVEL1("레벨1", Arrays.asList(Mission.CAR_RACING, Mission.LOTTO, Mission.BASEBALL)),
     LEVEL2("레벨2", Arrays.asList(Mission.SHOPPING_CART, Mission.PAYMENT, Mission.SUBWAY)),
     LEVEL3("레벨3", Collections.emptyList()),
-    LEVEL4("레벨4", Arrays.asList(Mission.PERFORMANCE_IMPROVEMENT, Mission.DEPLOYMENT)),
+    LEVEL4("레벨4", Arrays.asList(Mission.PERFORMANCE_IMPROVEMENT, Mission.RELEASE)),
     LEVEL5("레벨5", Collections.emptyList());
 
     private final String name;

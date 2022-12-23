@@ -5,11 +5,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import pairmatching.domain.Course;
-import pairmatching.domain.Pair;
+import pairmatching.domain.Level;
 import pairmatching.domain.Mission;
-import pairmatching.domain.PairHistory;
+import pairmatching.domain.MissionPair;
+import pairmatching.domain.PairRecord;
 import pairmatching.view.InputView;
 import pairmatching.view.OutputView;
 
@@ -19,79 +18,54 @@ public class PairMatching {
     OutputView outputView = new OutputView();
 
     public void run() {
-        PairHistory pairHistory = new PairHistory();
+        PairRecord backEndPairRecord = new PairRecord();
+        PairRecord frontEndPairRecord = new PairRecord();
+
         while (true) {
-            String selectedFeature = inputView.getFeature();
-            if (selectedFeature.equals("Q")) {
+            String selectFeature = inputView.getFeature();
+            if (selectFeature.equals("1")) {
+                String[] userInput = inputView.getPairBackgroundInfo();
+                if (userInput[0].equals("백엔드")) {
+                    backEndPairRecord.put(makeLevel(userInput[1]), makeMissionPair(userInput[0], userInput[2]));
+                }
+                if (userInput[0].equals("프론트엔드")) {
+                    frontEndPairRecord.put(makeLevel(userInput[1]), makeMissionPair(userInput[0], userInput[2]));
+                }
+            }
+            if (selectFeature.equals("2")) {
+                inquireRecord(backEndPairRecord, frontEndPairRecord);
+            }
+            if (selectFeature.equals("3")) {
+                backEndPairRecord.resetPairRecord();
+                frontEndPairRecord.resetPairRecord();
+            }
+            if (selectFeature.equals("Q")) {
                 break;
             }
-            if (selectedFeature.equals("1")) {
-                matchPair(pairHistory);
-            }
-            if (selectedFeature.equals("2")) {
-                inquirePair(pairHistory);
-            }
-            if (selectedFeature.equals("3")) {
-                resetPair(pairHistory);
-            }
         }
     }
 
-    private void matchPair(PairHistory pairHistory) {
-        Pair pair = getPairInfo();
-        if (pairHistory.isExist(pair) && inputView.getTryMore().equals("아니오")) {
-            return;
+    private void inquireRecord(PairRecord backEndPairRecord, PairRecord frontEndPairRecord) {
+        String[] userInput = inputView.getPairBackgroundInfo();
+        if (userInput[0].equals("백엔드")) {
+            outputView.printPairResult(backEndPairRecord.getMissionPair(makeLevel(userInput[1]), userInput[2]));
         }
-        try {
-            addNewPair(pairHistory, pair, 0);
-            outputView.printPairResult(pairHistory.getPair(pair));
-        } catch (IllegalArgumentException exception) {
-            System.out.println(exception.getMessage());
-            matchPair(pairHistory);
+        if (userInput[0].equals("프론트엔드")) {
+            outputView.printPairResult(frontEndPairRecord.getMissionPair(makeLevel(userInput[1]), userInput[2]));
         }
     }
 
-    private void addNewPair(PairHistory pairHistory, Pair pair, int count) {
-        if (count == 3) {
-            throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
+    private MissionPair makeMissionPair(String course, String mission) {
+        return new MissionPair(makeMission(mission), getRandomCrewNames(course));
+    }
+
+    private List<String> getRandomCrewNames(String userInput) {
+        if (userInput.equals("백엔드")) {
+            return new ArrayList<>(Randoms.shuffle(readCrewName("src/main/resources/backend-crew.md")));
         }
-        try {
-            if (pair.compareCourse(Course.BACKEND)) {
-                pairHistory.addPair(pair, getRandomCrewNames(Course.BACKEND.getEnglishName()));
-            }
-            if (pair.compareCourse(Course.FRONTEND)) {
-                pairHistory.addPair(pair, getRandomCrewNames(Course.FRONTEND.getEnglishName()));
-            }
-        } catch (IllegalArgumentException e) {
-            addNewPair(pairHistory, pair, count + 1);
-        }
-    }
 
-    private Pair getPairInfo() {
-        String[] pairBackgroundInfo = inputView.getPairBackgroundInfo();
-        Course course = Course.findByName(pairBackgroundInfo[0]);
-        Mission mission = Mission.findByName(pairBackgroundInfo[2]);
-        return new Pair(course, mission);
-    }
-
-    private void inquirePair(PairHistory pairHistory) {
-        Pair pair = getPairInfo();
-        try {
-            outputView.printPairResult(pairHistory.getPair(pair));
-        } catch (IllegalArgumentException exception) {
-            System.out.println(exception.getMessage());
-            inquirePair(pairHistory);
-        }
-    }
-
-    private void resetPair(PairHistory pairHistory) {
-        pairHistory.resetPair();
-        System.out.println("초기화 되었습니다.");
-    }
-
-    private List<String> getRandomCrewNames(String crewCourse) {
-        String filePath = "src/main/resources/" + crewCourse + "-crew.md";
-        return new ArrayList<>(Randoms.shuffle(readCrewName(filePath)));
+        //구조 이상.
+        return new ArrayList<>(Randoms.shuffle(readCrewName("src/main/resources/frontend-crew.md")));
     }
 
     private List<String> readCrewName(String fileName) {
@@ -106,5 +80,46 @@ public class PairMatching {
         } catch (Exception exception) {
             throw new IllegalArgumentException("파일을 읽는 중 에러가 발생했습니다.");
         }
+    }
+
+    private Level makeLevel(String level) {
+        if (level.equals("레벨1")) {
+            return Level.LEVEL1;
+        }
+        if (level.equals("레벨2")) {
+            return Level.LEVEL2;
+        }
+        if (level.equals("레벨3")) {
+            return Level.LEVEL3;
+        }
+        if (level.equals("레벨4")) {
+            return Level.LEVEL4;
+        }
+        return Level.LEVEL5;
+    }
+
+    private Mission makeMission(String mission) {
+        if (mission.equals("자동차경주")) {
+            return Mission.CAR_RACING;
+        }
+        if (mission.equals("로또")) {
+            return Mission.LOTTO;
+        }
+        if (mission.equals("숫자야구게임")) {
+            return Mission.BASEBALL;
+        }
+        if (mission.equals("장바구니")) {
+            return Mission.SHOPPING_CART;
+        }
+        if (mission.equals("결제")) {
+            return Mission.PAYMENT;
+        }
+        if (mission.equals("지하철노선도")) {
+            return Mission.SUBWAY;
+        }
+        if (mission.equals("성능개선")) {
+            return Mission.PERFORMANCE_IMPROVEMENT;
+        }
+        return Mission.RELEASE;
     }
 }
