@@ -26,10 +26,10 @@ public class PairMatching {
             if (selectFeature.equals("1")) {
                 String[] userInput = inputView.getPairBackgroundInfo();
                 if (userInput[0].equals("백엔드")) {
-                    makeBackMissionPair(backEndPairRecord,userInput[2],0);
+                    pairMatching(backEndPairRecord, userInput[0], userInput[2]);
                 }
                 if (userInput[0].equals("프론트엔드")) {
-                    makeFrontMissionPair(frontEndPairRecord,userInput[2],0);
+                    pairMatching(frontEndPairRecord, userInput[0], userInput[2]);
                 }
             }
             if (selectFeature.equals("2")) {
@@ -45,28 +45,48 @@ public class PairMatching {
         }
     }
 
-
-    // 메소드 2개?
-    private void makeBackMissionPair(PairRecord pairRecord, String mission, int count) {
-        if (count == 3)
-            throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
+    private void pairMatching(PairRecord pairRecord, String course, String mission) {
+        if (pairRecord.isExist(makeMission(mission)) && inputView.getTryMore().equals("아니오")) {
+            return;
+        }
         try {
-            MissionPair missionpair = new MissionPair(makeMission(mission), getRandomCrewNames("백엔드"));
-            System.out.println("missionPair : " +missionpair);
-            pairRecord.addPair(missionpair);
-        } catch (IllegalArgumentException e) {
-            makeBackMissionPair(pairRecord, mission, count);
+            if (course.equals("백엔드")) {
+                addNewBackEndPair(pairRecord, mission, 0);
+            }
+            if (course.equals("프론트엔드")) {
+                addNewFrontEndPair(pairRecord, mission, 0);
+            }
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            pairMatching(pairRecord, course, mission);
         }
     }
 
-    private void makeFrontMissionPair(PairRecord pairRecord, String mission, int count) {
-        if (count == 3)
+
+    // 메소드 2개?
+    private void addNewBackEndPair(PairRecord pairRecord, String mission, int count) {
+        if (count == 3) {
             throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
+        }
+        try {
+            MissionPair missionpair = new MissionPair(makeMission(mission), getRandomCrewNames("백엔드"));
+            pairRecord.addPair(missionpair);
+            outputView.printPairResult(missionpair);
+        } catch (IllegalArgumentException e) {
+            addNewBackEndPair(pairRecord, mission, count);
+        }
+    }
+
+    private void addNewFrontEndPair(PairRecord pairRecord, String mission, int count) {
+        if (count == 3) {
+            throw new IllegalArgumentException("3회 이상 매칭 중복이 발생하였습니다.");
+        }
         try {
             MissionPair missionpair = new MissionPair(makeMission(mission), getRandomCrewNames("프론트엔드"));
             pairRecord.addPair(missionpair);
+            outputView.printPairResult(missionpair);
         } catch (IllegalArgumentException e) {
-            makeFrontMissionPair(pairRecord, mission, count);
+            addNewFrontEndPair(pairRecord, mission, count);
         }
     }
 

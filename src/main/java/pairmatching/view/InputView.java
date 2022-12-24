@@ -12,8 +12,13 @@ public class InputView {
                 + "Q. 종료");
         String userInput = Console.readLine();
         System.out.println();
-        if (!userInput.equals("1") && !userInput.equals("2") && !userInput.equals("3") && !userInput.equals("Q")) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 기능 선택입니다.");
+        try {
+            if (!userInput.equals("1") && !userInput.equals("2") && !userInput.equals("3") && !userInput.equals("Q")) {
+                throw new IllegalArgumentException("[ERROR] 잘못된 기능 선택입니다.\n");
+            }
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            getFeature();
         }
         return userInput;
     }
@@ -32,8 +37,13 @@ public class InputView {
         System.out.println("ex) 백엔드, 레벨1, 자동차경주");
         String userInput = Console.readLine();
         System.out.println();
-        if (!Pattern.matches("[가-힣]{3,}, [가-힣1-5]{3}, [가-힣]{2,}", userInput)) {
-            throw new IllegalArgumentException("[ERROR] 입력 양식이 올바르지 않습니다.");
+        try {
+            if (!Pattern.matches("[가-힣]{3,}, [가-힣1-5]{3}, [가-힣]{2,}", userInput)) {
+                throw new IllegalArgumentException("[ERROR] 입력 양식이 올바르지 않습니다.\n");
+            }
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            getPairBackgroundInfo();
         }
         return userInput.split(", ");
     }
@@ -43,8 +53,13 @@ public class InputView {
         System.out.println("네 | 아니오");
         String userInput = Console.readLine();
         System.out.println();
-        if (!userInput.equals("예") && !userInput.equals("아니오")) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다.");
+        try {
+            if (!userInput.equals("네") && !userInput.equals("아니오")) {
+                throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다.\n");
+            }
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            getTryMore();
         }
         return userInput;
     }

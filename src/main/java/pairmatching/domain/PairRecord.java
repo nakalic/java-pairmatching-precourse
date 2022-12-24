@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class PairRecord {
     private final Map<Level, List<MissionPair>> pairRecord;
@@ -30,20 +31,20 @@ public class PairRecord {
                 .orElseThrow(() -> new IllegalArgumentException("조건에 맞는 페어 이력이 없습니다"));
     }
 
-    /**
-     *
-     */
-
     public void addPair(MissionPair newMissionPair) {
-        System.out.println("newMissionPair : " + newMissionPair);
         checkDuplicateMatch(newMissionPair);
         pairRecord.get(newMissionPair.getMission().getLevel()).add(newMissionPair);
     }
 
+    public boolean isExist(Mission mission) {
+        Optional<MissionPair> temp = pairRecord.get(mission.getLevel()).stream()
+                .filter(missionPair -> missionPair.getMission().getName().equals(mission.getName()))
+                .findAny();
+        return temp.isPresent();
+    }
+
     // 검증 메소드 a,b / b,a 및 a : b: c 고려할 것
     public void checkDuplicateMatch(MissionPair newMissionPair) {
-        System.out.println("checkDuplicateMatch newMissionPair : " + newMissionPair);
-        System.out.println(newMissionPair.getMission().getLevel());
         if (pairRecord.get(newMissionPair.getMission().getLevel()).isEmpty()) {
             return;
         }
