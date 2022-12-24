@@ -12,7 +12,4 @@ public enum Level {
     Level(String name) {
         this.name = name;
     }
-    private boolean checkName(String name) {
-        return this.name.equals(name);
-    }
 }
