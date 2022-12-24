@@ -56,6 +56,10 @@ public class PairRecord {
                     .equals(newCrews.get(i + 1))) {
                 throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
             }
+            if (existCrews.get(i).equals(newCrews.get(i+1)) && existCrews.get(i+1)
+                    .equals(newCrews.get(i))) {
+                throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+            }
         }
         if (existCrews.size() % 2 == 0) {
             checkEvenNumberOfCrews(existCrews, newCrews);
@@ -74,10 +78,34 @@ public class PairRecord {
     }
 
     private void checkOddNumberOfCrews(List<String> existCrews, List<String> newCrews) {
-        if (existCrews.get(existCrews.size() - 1).equals(newCrews.get(existCrews.size() - 1)) && existCrews.get(
+        if (existCrews.get(existCrews.size() - 3).equals(newCrews.get(existCrews.size() - 2)) && existCrews.get(
                         existCrews.size() - 2)
-                .equals(newCrews.get(existCrews.size() - 2)) && existCrews.get(existCrews.size() - 3)
                 .equals(newCrews.get(existCrews.size() - 3))) {
+            throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+        }
+        if (existCrews.get(existCrews.size() - 2).equals(newCrews.get(existCrews.size() - 3)) && existCrews.get(
+                        existCrews.size() - 3)
+                .equals(newCrews.get(existCrews.size() - 2))) {
+            throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+        }
+        if (existCrews.get(existCrews.size() - 2).equals(newCrews.get(existCrews.size() - 1)) && existCrews.get(
+                        existCrews.size() - 1)
+                .equals(newCrews.get(existCrews.size() - 2))) {
+            throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+        }
+        if (existCrews.get(existCrews.size() - 1).equals(newCrews.get(existCrews.size() - 2)) && existCrews.get(
+                        existCrews.size() - 2)
+                .equals(newCrews.get(existCrews.size() - 1))) {
+            throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+        }
+        if (existCrews.get(existCrews.size() - 3).equals(newCrews.get(existCrews.size() - 1)) && existCrews.get(
+                        existCrews.size() - 1)
+                .equals(newCrews.get(existCrews.size() - 3))) {
+            throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
+        }
+        if (existCrews.get(existCrews.size() - 1).equals(newCrews.get(existCrews.size() - 3)) && existCrews.get(
+                        existCrews.size() - 3)
+                .equals(newCrews.get(existCrews.size() - 1))) {
             throw new IllegalArgumentException("매칭 중복이 발생하였습니다.");
         }
     }

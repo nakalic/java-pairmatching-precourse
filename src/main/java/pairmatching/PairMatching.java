@@ -62,7 +62,6 @@ public class PairMatching {
         }
     }
 
-
     // 메소드 2개?
     private void addNewBackEndPair(PairRecord pairRecord, String mission, int count) {
         if (count == 3) {
@@ -104,7 +103,6 @@ public class PairMatching {
         if (userInput.equals("백엔드")) {
             return new ArrayList<>(Randoms.shuffle(readCrewName("src/main/resources/backend-crew.md")));
         }
-
         //구조 이상.
         return new ArrayList<>(Randoms.shuffle(readCrewName("src/main/resources/frontend-crew.md")));
     }

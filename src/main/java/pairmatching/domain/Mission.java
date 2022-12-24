@@ -1,7 +1,5 @@
 package pairmatching.domain;
 
-import java.util.Arrays;
-
 public enum Mission {
     CAR_RACING("자동차경주", Level.LEVEL1),
     LOTTO("로또", Level.LEVEL1),

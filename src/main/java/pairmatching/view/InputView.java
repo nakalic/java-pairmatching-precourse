@@ -37,15 +37,34 @@ public class InputView {
         System.out.println("ex) 백엔드, 레벨1, 자동차경주");
         String userInput = Console.readLine();
         System.out.println();
+        String[] userInputSplit = userInput.split(", ");
         try {
             if (!Pattern.matches("[가-힣]{3,}, [가-힣1-5]{3}, [가-힣]{2,}", userInput)) {
                 throw new IllegalArgumentException("[ERROR] 입력 양식이 올바르지 않습니다.\n");
+            }
+            // 이렇게 확인하는 것이 최선일까?
+            if (userInputSplit[1].equals("레벨1")) {
+                if (!(userInputSplit[2].equals("자동차경주") || userInputSplit[2].equals("로또") || userInputSplit[2].equals(
+                        "숫자야구게임"))) {
+                    throw new IllegalArgumentException("[ERROR] 존재하지 않는 레벨 혹은 미션입니다.");
+                }
+            }
+            if (userInputSplit[1].equals("레벨2")) {
+                if (!(userInputSplit[2].equals("장바구니") || userInputSplit[2].equals("결제") || userInputSplit[2].equals(
+                        "지하철노선도"))) {
+                    throw new IllegalArgumentException("[ERROR] 존재하지 않는 레벨 혹은 미션입니다.");
+                }
+            }
+            if (userInputSplit[1].equals("레벨4")) {
+                if (!(userInputSplit[2].equals("성능개선") || userInputSplit[2].equals("배포"))) {
+                    throw new IllegalArgumentException("[ERROR] 존재하지 않는 레벨 혹은 미션입니다.");
+                }
             }
         } catch (IllegalArgumentException exception) {
             System.out.println(exception.getMessage());
             getPairBackgroundInfo();
         }
-        return userInput.split(", ");
+        return userInputSplit;
     }
 
     public String getTryMore() {
