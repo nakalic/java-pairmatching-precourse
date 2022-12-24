@@ -11,19 +11,15 @@ public class MissionPair {
         this.result = result;
     }
 
-    public Mission getMission() {
-        return mission;
+    public Level getMissionLevel() {
+        return mission.getLevel();
+    }
+
+    public String getMissionName() {
+        return mission.getName();
     }
 
     public List<String> getResult() {
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "MissionPair{" +
-                "mission=" + mission +
-                ", result=" + result +
-                '}';
     }
 }

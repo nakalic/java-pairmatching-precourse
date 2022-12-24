@@ -26,30 +26,30 @@ public class PairRecord {
     public MissionPair getMissionPair(Level level, String name) {
         return pairRecord.get(level)
                 .stream()
-                .filter(missionPair -> missionPair.getMission().getName().equals(name))
+                .filter(missionPair -> missionPair.getMissionName().equals(name))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("조건에 맞는 페어 이력이 없습니다"));
     }
 
     public void addPair(MissionPair newMissionPair) {
         checkDuplicateMatch(newMissionPair);
-        pairRecord.get(newMissionPair.getMission().getLevel()).add(newMissionPair);
+        pairRecord.get(newMissionPair.getMissionLevel()).add(newMissionPair);
     }
 
     public boolean isExist(Mission mission) {
         Optional<MissionPair> temp = pairRecord.get(mission.getLevel()).stream()
-                .filter(missionPair -> missionPair.getMission().getName().equals(mission.getName()))
+                .filter(missionPair -> missionPair.getMissionName().equals(mission.getName()))
                 .findAny();
         return temp.isPresent();
     }
 
     // 검증 메소드 a,b / b,a 및 a : b: c 고려할 것
     public void checkDuplicateMatch(MissionPair newMissionPair) {
-        if (pairRecord.get(newMissionPair.getMission().getLevel()).isEmpty()) {
+        if (pairRecord.get(newMissionPair.getMissionLevel()).isEmpty()) {
             return;
         }
-        List<String> existCrews = this.getMissionPair(newMissionPair.getMission().getLevel(),
-                newMissionPair.getMission().getName()).getResult();
+        List<String> existCrews = this.getMissionPair(newMissionPair.getMissionLevel(),
+                newMissionPair.getMissionName()).getResult();
         List<String> newCrews = newMissionPair.getResult();
         for (int i = 0; i < existCrews.size() - 2; i += 2) {
             if (existCrews.get(i).equals(newCrews.get(i)) && existCrews.get(i + 1)
